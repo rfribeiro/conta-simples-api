@@ -9,6 +9,9 @@ class User {
     email: string;
 
     @Column()
+    mobile: string;
+
+    @Column()
     password: string;
 
     @CreateDateColumn()
