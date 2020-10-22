@@ -18,5 +18,7 @@ router.get('/users', AuthMiddleware, UserController.index)
 
 // Enterprise endpoints
 router.post('/enterprises', EnterpriseController.register)
+router.get('/enterprises', EnterpriseController.index)
+router.get('/enterprises/:id', EnterpriseController.show)
 
 export default router
