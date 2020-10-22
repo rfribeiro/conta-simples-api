@@ -4,6 +4,7 @@ import User from '../models/User';
 import TokenHelper from '../utils/TokenHelper';
 import Mail from '../services/Mailer';
 import PasswordHelper from '../utils/PasswordHelper';
+import UserView from '../views/user_view';
 
 const mailConfig = require('../config/mail.json');
 
@@ -26,11 +27,8 @@ class AuthController {
                 return res.sendStatus(401)
             }
 
-            delete user.password
-            delete user.passwordResetToken
-            delete user.passwordResetExpires
             return res.json({
-                user,
+                user: UserView.render(user),
                 token : TokenHelper.generate({id: user.id})
             })
         } catch (err) {
@@ -68,10 +66,12 @@ class AuthController {
                 subject: mailConfig.subject,
                 context: { token }
             })
-            return res.send('Email sent')
+            return res.send({
+                user: UserView.render(user),
+                message: 'Email sent with success'
+            })
         } catch (err) {
             console.log('Errors occurred, failed to deliver message');
-
             if (err.response && err.response.body && err.response.body.errors) {
                 err.response.body.errors.forEach((error: any) => console.log('%s: %s', error.field, error.message));
             } else {
@@ -108,7 +108,10 @@ class AuthController {
 
             await repository.save(user)
 
-            return res.send('password reset with success')
+            return res.send({
+                user: UserView.render(user),
+                message: 'password reset with success'
+            })
         } catch (err) {
             res.status(400).send({ error: 'Cannot reset password, try again' })
         }
