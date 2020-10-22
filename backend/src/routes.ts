@@ -9,6 +9,8 @@ const router = Router()
 
 // Authentication endpoints
 router.post('/login', AuthController.authenticate)
+router.post('/forgot_password', AuthController.forgotPassword)
+router.post('/reset_password', AuthController.resetPassword)
 
 // User endpoints
 router.post('/users', UserController.register)
