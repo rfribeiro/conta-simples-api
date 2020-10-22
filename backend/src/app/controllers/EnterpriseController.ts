@@ -18,8 +18,6 @@ class EnterpriseController {
                 relations: ['enterprise']
             })
 
-            console.log(user.enterprise.bankAccount)
-
             const fullEnterprise = await repositoryEnterprise.findOneOrFail(user.enterprise.id, {
                 relations: ['user', 'bankAccount']
             })
@@ -28,7 +26,6 @@ class EnterpriseController {
                 EnterpriseView.render(fullEnterprise)
             )
         } catch (err) {
-            console.log(err)
             return res.status(400).send({ error: 'Cannot find user, try again' })
         }
     }
@@ -43,13 +40,10 @@ class EnterpriseController {
                 relations: ['enterprise']
             })
 
-            console.log(user.enterprise)
-
             return res.send(
                 EnterpriseView.balance(user.enterprise)
             )
         } catch (err) {
-            console.log(err)
             return res.status(400).send({ error: 'Cannot find user, try again' })
         }
     }
@@ -91,7 +85,6 @@ class EnterpriseController {
             )
 
         } catch (err) {
-            console.log(err)
             return res.status(400).send({ error: 'Cannot register user, try again' })
         }
     }

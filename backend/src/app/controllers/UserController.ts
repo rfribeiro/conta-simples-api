@@ -19,7 +19,6 @@ class UserController {
                 user: UserView.render(userExists)
             })
         } catch (err) {
-            console.log(err)
             return res.status(400).send({ error: 'Cannot find user, try again' })
         }
     }
@@ -45,7 +44,6 @@ class UserController {
                 token : TokenHelper.generate({id: user.id})
             })
         } catch (err) {
-            console.log(err)
             return res.status(400).send({ error: 'Cannot register user, try again' })
         }
     }
