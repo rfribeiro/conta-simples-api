@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import AuthController from './app/controllers/AuthController'
 import EnterpriseController from './app/controllers/EnterpriseController'
+import TransactionController from './app/controllers/TransactionController'
 import UserController from './app/controllers/UserController'
 import AuthMiddleware from './app/middleware/AuthMiddleware'
 
@@ -20,5 +21,9 @@ router.get('/users', AuthMiddleware, UserController.index)
 router.post('/enterprises', AuthMiddleware, EnterpriseController.register)
 router.get('/enterprises', AuthMiddleware, EnterpriseController.index)
 router.get('/enterprises/balance', AuthMiddleware, EnterpriseController.balance)
+
+// Transactions endpoints
+router.post('/transactions', AuthMiddleware, TransactionController.create)
+router.get('/transactions', AuthMiddleware, TransactionController.index)
 
 export default router
