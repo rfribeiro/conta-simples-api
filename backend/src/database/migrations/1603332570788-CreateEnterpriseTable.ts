@@ -35,6 +35,8 @@ export class CreateEnterpriseTable1603332570788 implements MigrationInterface {
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.dropTable('enterprises')
+        // await queryRunner.query('DROP EXTENSION CASCADE "uuid-ossp"')   
     }
 
 }

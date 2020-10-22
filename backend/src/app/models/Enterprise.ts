@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity('enterprises')
-class User {
+class Enterprise {
     @PrimaryGeneratedColumn('uuid')
     id: string ;
 
@@ -15,4 +15,4 @@ class User {
     createdAt: Date;
 }
 
-export default User;
+export default Enterprise;

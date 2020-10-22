@@ -1,8 +1,8 @@
 import { Router } from 'express'
 
-import AuthController from './controllers/AuthController'
-import EnterpriseController from './controllers/EnterpriseController'
-import UserController from './controllers/UserController'
+import AuthController from './app/controllers/AuthController'
+import EnterpriseController from './app/controllers/EnterpriseController'
+import UserController from './app/controllers/UserController'
 
 const router = Router()
 
@@ -10,9 +10,9 @@ const router = Router()
 router.post('/login', AuthController.authenticate)
 
 // User endpoints
-router.post('/users/register', UserController.register)
+router.post('/users', UserController.register)
 
 // Enterprise endpoints
-router.post('/enterprises/register', EnterpriseController.register)
+router.post('/enterprises', EnterpriseController.register)
 
 export default router
