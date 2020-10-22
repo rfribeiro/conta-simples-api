@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import User from '../models/User';
 import bcrypt from 'bcryptjs'
+import TokenHelper from '../utils/TokenHelper';
 
 class AuthController {
     async authenticate(req: Request, res: Response) {
@@ -25,12 +26,12 @@ class AuthController {
             delete user.password
             delete user.passwordResetToken
             delete user.passwordResetExpires
-
             return res.json({
                 user,
+                token : TokenHelper.generate({id: user.id})
             })
         } catch (err) {
-            res.status(400).send({ error: 'Cannot authenticate user, try again' })
+            return res.status(400).send({ error: 'Cannot authenticate user, try again' })
         }
     }
 
