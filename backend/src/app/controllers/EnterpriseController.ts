@@ -3,30 +3,59 @@ import { getRepository } from 'typeorm';
 import BankAccount from '../models/BankAccount';
 import Enterprise from '../models/Enterprise';
 import User from '../models/User';
-
+import EnterpriseView from '../views/enterprise_view'
 
 class EnterpriseController {
 
     async index(req: Request, res: Response) {
-        const { userId } = req
+        try {
+            const { userId } = req
 
+            const userRepository = getRepository(User);
+            const repositoryEnterprise = getRepository(Enterprise);
+
+            const user = await userRepository.findOneOrFail(userId, {
+                relations: ['enterprise']
+            })
+
+            console.log(user.enterprise.bankAccount)
+
+            const fullEnterprise = await repositoryEnterprise.findOneOrFail(user.enterprise.id, {
+                relations: ['user', 'bankAccount']
+            })
+
+            return res.send(
+                EnterpriseView.render(fullEnterprise)
+            )
+        } catch (err) {
+            console.log(err)
+            return res.status(400).send({ error: 'Cannot find user, try again' })
+        }
     }
 
-    async show(req: Request, res: Response) {
-        const { userId } = req
-        const { id } = req.params;
+    async balance(req: Request, res: Response) {
+        try {
+            const { userId } = req
 
-        const enterpriseRepository = getRepository(Enterprise);
+            const userRepository = getRepository(User);
 
-        const enterprise = await enterpriseRepository.findOneOrFail(id, {
-            relations: ['bank']
-        })
+            const user = await userRepository.findOneOrFail(userId, {
+                relations: ['enterprise']
+            })
 
-        return res.send(enterprise)
+            console.log(user.enterprise)
+
+            return res.send(
+                EnterpriseView.balance(user.enterprise)
+            )
+        } catch (err) {
+            console.log(err)
+            return res.status(400).send({ error: 'Cannot find user, try again' })
+        }
     }
 
     async register(req: Request, res: Response) {
-        try 
+        try
         {
             const { userId } = req
             const { name, cnpj } = req.body
@@ -40,7 +69,13 @@ class EnterpriseController {
                 return res.sendStatus(409)
             }
 
-            const user = await repositoryUser.findOneOrFail(userId)
+            const user = await repositoryUser.findOneOrFail(userId, {
+                relations: ['enterprise']
+            })
+
+            if (user.enterprise) {
+                return res.status(400).send('User already assigned to a Enterprise')
+            }
 
             const bankAccount = new BankAccount()
             bankAccount.bankName = "CONTA SIMPLES"
@@ -51,9 +86,9 @@ class EnterpriseController {
             const enterprise = repositoryEnterprise.create({ name, cnpj, bankAccount, user})
             await repositoryEnterprise.save(enterprise)
 
-            return res.status(201).json({
-                enterprise
-            })
+            return res.status(201).json(
+                EnterpriseView.render(enterprise)
+            )
 
         } catch (err) {
             console.log(err)
