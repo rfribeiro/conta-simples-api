@@ -1,13 +1,8 @@
-interface UserViewData {
-    email: string;
-    mobile: string;
-    id: string;
-    createdAt: Date;
-}
+import User from "../models/User"
 
 class UserView {
 
-    render(data: UserViewData) {
+    render(data: User) {
         const { id, email, mobile, createdAt } = data
         return ({
             id,
