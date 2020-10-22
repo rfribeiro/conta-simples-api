@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import User from '../models/User';
 import TokenHelper from '../utils/TokenHelper';
+import UserView from '../views/user_view'
 
 class UserController {
     async index(req: Request, res: Response) {
@@ -24,12 +25,8 @@ class UserController {
             const user = repository.create({ email, mobile, password })
             await repository.save(user)
 
-            delete user.password
-            delete user.passwordResetToken
-            delete user.passwordResetExpires
-
             return res.status(201).json({
-                user,
+                user: UserView.render(user),
                 token : TokenHelper.generate({id: user.id})
             })
         } catch (err) {
