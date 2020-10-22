@@ -1,5 +1,6 @@
 import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm'
 import bcrypt from 'bcryptjs'
+import PasswordHelper from '../utils/PasswordHelper';
 
 @Entity('users')
 class User {
@@ -26,7 +27,7 @@ class User {
 
     @BeforeInsert()
     hashPassword() {
-        this.password = bcrypt.hashSync(this.password, 8)
+        this.password = PasswordHelper.hash(this.password)
     }
 }
 

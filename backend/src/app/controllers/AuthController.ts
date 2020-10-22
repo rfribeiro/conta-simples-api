@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import User from '../models/User';
-import bcrypt from 'bcryptjs'
 import TokenHelper from '../utils/TokenHelper';
 import Mail from '../services/Mailer';
+import PasswordHelper from '../utils/PasswordHelper';
 
 const mailConfig = require('../config/mail.json');
 
@@ -20,7 +20,7 @@ class AuthController {
                 return res.sendStatus(400)
             }
 
-            const isValidPassword = await bcrypt.compare(password, user.password)
+            const isValidPassword = PasswordHelper.verify(password, user.password)
 
             if (!isValidPassword) {
                 return res.sendStatus(401)
