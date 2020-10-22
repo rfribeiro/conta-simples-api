@@ -25,6 +25,11 @@ export class CreateEnterpriseTable1603332570788 implements MigrationInterface {
                     type: 'varchar',
                     isUnique: true,
                 },
+                {
+                    name: 'createdAt',
+                    type: 'timestamp',
+                    default: 'now()',
+                },
             ]
         }))        
     }
