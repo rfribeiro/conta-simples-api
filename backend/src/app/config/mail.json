@@ -1,0 +1,5 @@
+{
+    "to": "rafaelfernandoribeiro@hotmail.com",
+    "subject" : "Conta Simples - Recuperação de senha",
+    "template" : "auth/forgot_password"
+}
