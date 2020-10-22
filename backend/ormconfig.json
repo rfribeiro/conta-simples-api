@@ -2,9 +2,9 @@
     "type": "postgres",
     "host": "localhost",
     "port": 5432,
-    "username": "docker",
-    "password": "docker",
-    "database": "contasimples",
+    "username": "contasimples",
+    "password": "contasimples",
+    "database": "conta-simples",
     "entities": [
        "src/app/models/*.ts"
     ],
