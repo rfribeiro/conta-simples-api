@@ -26,10 +26,27 @@ export class CreateEnterpriseTable1603332570788 implements MigrationInterface {
                     isUnique: true,
                 },
                 {
+                    name: 'balance',
+                    type: 'numeric',
+                    default: 0,
+                },
+                {
                     name: 'createdAt',
                     type: 'timestamp',
                     default: 'now()',
                 },
+                {
+                    name: 'user_id',
+                    type: 'uuid',
+                },
+            ],
+            foreignKeys: [
+                {
+                    name: 'UserAccountEnterprise',
+                    columnNames: ['user_id'],
+                    referencedTableName: 'users',
+                    referencedColumnNames: ['id'],
+                }
             ]
         }))        
     }
