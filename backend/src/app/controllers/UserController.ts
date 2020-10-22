@@ -6,7 +6,22 @@ import UserView from '../views/user_view'
 
 class UserController {
     async index(req: Request, res: Response) {
-        return res.send({ userId: req.userId })
+        try
+        {
+            const repository = getRepository(User)
+
+            const userExists = await repository.findOneOrFail(req.userId)
+            if (!userExists) {
+                return res.sendStatus(409)
+            }
+
+            return res.status(201).json({
+                user: UserView.render(userExists)
+            })
+        } catch (err) {
+            console.log(err)
+            return res.status(400).send({ error: 'Cannot find user, try again' })
+        }
     }
 
     async register(req: Request, res: Response) {
