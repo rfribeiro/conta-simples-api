@@ -4,6 +4,9 @@ import User from '../models/User';
 import TokenHelper from '../utils/TokenHelper';
 
 class UserController {
+    async index(req: Request, res: Response) {
+        return res.send({ userId: req.userId })
+    }
 
     async register(req: Request, res: Response) {
         try 
