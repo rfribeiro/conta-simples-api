@@ -10,6 +10,10 @@ class TransactionTypeView {
             description,
         })
     }
+
+    renderMany(data: TransactionType[]) {
+        return data.map(type => this.render(type));
+    }
 }
 
 export default new TransactionTypeView()
