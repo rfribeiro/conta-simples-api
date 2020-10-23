@@ -15,7 +15,10 @@ class AuthController {
 
             const { email, password } = req.body
 
-            const user = await repository.findOne({ where: { email }})
+            const user = await repository.findOne({ 
+                where: { email },
+                relations: ['enterprise']
+            })
 
             if (!user) {
                 return res.sendStatus(400)
@@ -29,9 +32,13 @@ class AuthController {
 
             return res.json({
                 user: UserView.render(user),
-                token : TokenHelper.generate({id: user.id})
+                token : TokenHelper.generate({
+                    userId: user.id, 
+                    enterpriseId: user.enterprise.id
+                })
             })
         } catch (err) {
+            console.log(err)
             return res.status(400).send({ error: 'Cannot authenticate user, try again' })
         }
     }

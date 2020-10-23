@@ -19,9 +19,10 @@ export default function AuthMiddleware(
     try {
         const data = TokenHelper.verify(token)
 
-        const { id } = data
+        const { userId, enterpriseId } = data
 
-        req.userId = id
+        req.userId = userId
+        req.enterpriseId = enterpriseId
 
         next() 
     } catch {
