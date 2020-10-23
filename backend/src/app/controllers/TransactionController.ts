@@ -55,28 +55,27 @@ class TransactionController {
             const { enterpriseId } = req
 
             if (!enterpriseId) {
-                return res.status(400).send('Enteprise is not assigned to user')
+                return res.status(400).send({ error: 'Enteprise is not assigned to user'})
             }
 
-            const transactions = await getRepository(Transaction)
-                    .find({
-                        relations: ['enterprise', 'type'],
-                        where: {
-                            enterprise: enterpriseId
-                        },
-                        order: {
-                            createdAt: 'DESC',
-                        },
-                        take: 1,
-                        cache: true
-                    })
+            const transaction = await getRepository(Transaction)
+                .createQueryBuilder("transactions")
+                .innerJoinAndSelect("transactions.type", "transactionTypes")
+                .innerJoinAndSelect("transactions.enterprise", "enterprises")
+                .where("enterprises.id = :enterpriseId")
+                .orderBy("transactions.createdAt", "DESC")
+                .setParameters({ enterpriseId })
+                .skip(0)
+                .take(1)
+                .cache(true)
+                .getOne()
 
-            if (transactions.length === 0) {
-                return res.status(400).send('Transactions not found for this enterprise')
+            if (!transaction) {
+                return res.status(400).send({ error: 'Transactions not found for this enterprise' })
             }
 
             return res.send(
-                TransactionView.render(transactions[0])
+                TransactionView.render(transaction)
             )
 
         } catch (err) {
