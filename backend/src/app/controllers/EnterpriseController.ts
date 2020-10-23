@@ -62,8 +62,6 @@ class EnterpriseController {
                 relations: ['transactions', 'transactions.enterprise', 'transactions.type']
             })
 
-            console.log(enterprise)
-
             return res.send(
                 TransactionView.renderMany(enterprise.transactions)
             )
