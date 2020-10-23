@@ -27,17 +27,31 @@ export class CreateTransactionsTable1603339842798 implements MigrationInterface 
                 {
                     name: 'local',
                     type: 'varchar',
+                    isNullable:true,
                 },
                 {
                     name: 'credit',
                     type: 'boolean',
                 },          
+                {
+                    name: 'type_id',
+                    type: 'uuid',
+                },
+            ],
+            foreignKeys: [
+                {
+                    name: 'TransactionType',
+                    columnNames: ['type_id'],
+                    referencedTableName: 'transactionTypes',
+                    referencedColumnNames: ['id'],
+                }
             ]
         }))        
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropTable('transactions')
+        
         // await queryRunner.query('DROP EXTENSION CASCADE "uuid-ossp"')   
     }
 
