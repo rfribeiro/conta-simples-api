@@ -19,7 +19,7 @@ class Transactions {
     credit: boolean;
 
     @OneToOne(type => TransactionType)
-    @JoinColumn()
+    @JoinColumn({name: 'type_id'})
     type: TransactionType;
 }
 
