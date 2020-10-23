@@ -34,7 +34,7 @@ class AuthController {
                 user: UserView.render(user),
                 token : TokenHelper.generate({
                     userId: user.id, 
-                    enterpriseId: user.enterprise.id
+                    enterpriseId: user.enterprise ? user.enterprise.id : undefined
                 })
             })
         } catch (err) {
