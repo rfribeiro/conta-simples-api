@@ -22,6 +22,7 @@ router.get('/users', AuthMiddleware, UserController.index)
 router.post('/enterprises', AuthMiddleware, EnterpriseController.register)
 router.get('/enterprises', AuthMiddleware, EnterpriseController.index)
 router.get('/enterprises/balance', AuthMiddleware, EnterpriseController.balance)
+router.get('/enterprises/transactions', AuthMiddleware, EnterpriseController.transactions)
 
 // Transactions endpoints
 router.post('/transactions', AuthMiddleware, TransactionController.create)

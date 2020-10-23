@@ -1,6 +1,7 @@
 import { BeforeInsert, Column, CreateDateColumn, Entity, getRepository, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
 import BankAccount from './BankAccount'
 import User from './User';
+import Transaction from './Transaction'
 
 @Entity('enterprises')
 class Enterprise {
@@ -27,6 +28,9 @@ class Enterprise {
     @OneToOne(type => User, user => user.enterprise)
     @JoinColumn({name: 'user_id'})
     user: User;
+
+    @OneToMany(type => Transaction, transaction => transaction.enterprise)
+    transactions: Transaction[];
 }
 
 export default Enterprise;

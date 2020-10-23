@@ -1,8 +1,9 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
+import Enterprise from './Enterprise';
 import TransactionType from './TransactionType'
 
 @Entity('transactions')
-class Transactions {
+class Transaction {
     @PrimaryGeneratedColumn('uuid')
     id: string ;
 
@@ -21,6 +22,10 @@ class Transactions {
     @OneToOne(type => TransactionType)
     @JoinColumn({name: 'type_id'})
     type: TransactionType;
+
+    @ManyToOne(type => Enterprise, enterprise => enterprise.transactions)
+    @JoinColumn({name: 'enterprise_id'})
+    enterprise: Enterprise;
 }
 
-export default Transactions;
+export default Transaction;

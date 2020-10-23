@@ -37,12 +37,22 @@ export class CreateTransactionsTable1603339842798 implements MigrationInterface 
                     name: 'type_id',
                     type: 'uuid',
                 },
+                {
+                    name: 'enterprise_id',
+                    type: 'uuid',
+                },
             ],
             foreignKeys: [
                 {
                     name: 'TransactionType',
                     columnNames: ['type_id'],
                     referencedTableName: 'transactionTypes',
+                    referencedColumnNames: ['id'],
+                },
+                {
+                    name: 'Enterprise',
+                    columnNames: ['enterprise_id'],
+                    referencedTableName: 'enterprises',
                     referencedColumnNames: ['id'],
                 }
             ]
