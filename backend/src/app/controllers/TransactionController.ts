@@ -30,6 +30,36 @@ class TransactionController {
         }
     }
 
+    async last(req: Request, res: Response) {
+        try {
+            const { enterpriseId } = req
+
+            if (!enterpriseId) {
+                return res.status(400).send('Enteprise is not assigned to user')
+            }
+
+            const repository = getRepository(Transaction);
+
+            const enterprise = await repository.find({
+                //where: { enterprise : enterpriseId},
+                order: {
+                    createdAt: 'DESC'
+                },
+                take: 1,
+                relations: ['enterprise', 'type']
+            })
+
+            console.log(enterprise)
+            return res.send(
+                TransactionView.renderMany(enterprise)
+            )
+
+        } catch (err) {
+            console.log(err)
+            return res.status(400).send({ error: 'Cannot find user, try again' })
+        }
+    }
+
     async create(req: Request, res: Response) {
         try
         {

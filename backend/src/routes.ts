@@ -27,6 +27,7 @@ router.get('/enterprises/transactions', AuthMiddleware, EnterpriseController.tra
 // Transactions endpoints
 router.post('/transactions', AuthMiddleware, TransactionController.create)
 router.get('/transactions', AuthMiddleware, TransactionController.index)
+router.get('/transactions/last', AuthMiddleware, TransactionController.last)
 
 // Transactions types endpoints
 router.post('/transactions_types', AuthMiddleware, TransactionTypeController.create)
