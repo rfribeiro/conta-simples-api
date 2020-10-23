@@ -9,16 +9,15 @@ class EnterpriseController {
 
     async index(req: Request, res: Response) {
         try {
-            const { userId } = req
+            const { enterpriseId } = req
 
-            const userRepository = getRepository(User);
+            if (!enterpriseId) {
+                return res.status(400).send('Enteprise is not assigned to user')
+            }
+
             const repositoryEnterprise = getRepository(Enterprise);
 
-            const user = await userRepository.findOneOrFail(userId, {
-                relations: ['enterprise']
-            })
-
-            const fullEnterprise = await repositoryEnterprise.findOneOrFail(user.enterprise.id, {
+            const fullEnterprise = await repositoryEnterprise.findOneOrFail(enterpriseId, {
                 relations: ['user', 'bankAccount']
             })
 
