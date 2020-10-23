@@ -7,7 +7,27 @@ import TransactionView from '../views/transaction_view';
 
 class TransactionController {
     async index(req: Request, res: Response) {
-        return res.send('OK');
+        try {
+            const { enterpriseId } = req
+
+            if (!enterpriseId) {
+                return res.status(400).send('Enteprise is not assigned to user')
+            }
+
+            const repository = getRepository(Enterprise);
+
+            const enterprise = await repository.findOne(enterpriseId, {
+                relations: ['transactions', 'transactions.enterprise', 'transactions.type']
+            })
+
+            return res.send(
+                TransactionView.renderMany(enterprise.transactions)
+            )
+
+        } catch (err) {
+            console.log(err)
+            return res.status(400).send({ error: 'Cannot find user, try again' })
+        }
     }
 
     async create(req: Request, res: Response) {
