@@ -15,9 +15,11 @@ class TransactionController {
                 return res.status(400).send('Enteprise is not assigned to user')
             }
 
-            limit = (limit < 0 || limit > 50) ?  10 : limit;
+            limit = (limit < 0 || limit > 50) ?  10 : Number(limit);
 
-            page = (page < 1) ? 1 : page;
+            page = (page < 1) ? 1 : Number(page);
+
+            const skip = (page * limit) - limit
 
             const transactions = await getRepository(Transaction)
                 .createQueryBuilder("transactions")
@@ -26,8 +28,8 @@ class TransactionController {
                 .where("enterprises.id = :enterpriseId")
                 .orderBy("transactions.createdAt", "DESC")
                 .setParameters({ enterpriseId })
-                .skip(Number(page) * Number(limit))
-                .take(Number(limit))
+                .skip(skip)
+                .take(limit)
                 .cache(true)
                 .getManyAndCount()
 
