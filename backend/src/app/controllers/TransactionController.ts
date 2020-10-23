@@ -12,7 +12,7 @@ class TransactionController {
             let { page = 1, limit = 10 } = req.query
 
             if (!enterpriseId) {
-                return res.status(400).send('Enteprise is not assigned to user')
+                return res.status(400).send({ error: 'Enteprise is not assigned to user' })
             }
 
             limit = (limit < 0 || limit > 50) ?  10 : Number(limit);
@@ -34,7 +34,7 @@ class TransactionController {
                 .getManyAndCount()
 
             if (!transactions) {
-                return res.status(400).send('Transactions not found for this enterprise')
+                return res.status(400).send({ error: 'Transactions not found for this enterprise' })
             }
 
             return res.send({
@@ -92,7 +92,7 @@ class TransactionController {
             const { value, local, credit, finalCard, type } = req.body
 
             if (!enterpriseId) {
-                return res.status(400).send('Enterprise is not assigned for transactions')
+                return res.status(400).send({ error: 'Enterprise is not assigned for transactions' })
             }
             const repositoryEnterprise = getRepository(Enterprise)
             const repositoryTransaction = getRepository(Transaction)
