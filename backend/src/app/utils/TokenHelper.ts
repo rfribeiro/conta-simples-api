@@ -3,11 +3,13 @@ import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
 
 interface TokenData {
-    id: string;
+    userId: string;
+    enterpriseId?: string;
 }
 
 interface TokenPayload {
-    id: string;
+    userId: string;
+    enterpriseId: string;
     iat: number;
     exp:number;
 }
