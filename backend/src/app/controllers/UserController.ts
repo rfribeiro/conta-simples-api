@@ -41,7 +41,10 @@ class UserController {
 
             return res.status(201).json({
                 user: UserView.render(user),
-                token : TokenHelper.generate({id: user.id})
+                token : TokenHelper.generate({
+                    userId: user.id,
+                    enterpriseId: null
+                })
             })
         } catch (err) {
             return res.status(400).send({ error: 'Cannot register user, try again' })
