@@ -5,7 +5,21 @@ import TransactionTypeView from '../views/transactiontype_view';
 
 class TransactionTypeController {
     async index(req: Request, res: Response) {
-        return res.send('OK');
+        try
+        {
+            const repository = getRepository(TransactionType)
+
+            const exists = await repository.find()
+            if (!exists) {
+                return res.sendStatus(409)
+            }
+
+            return res.status(201).json(
+                TransactionTypeView.renderMany(exists)
+            )
+        } catch (err) {
+            return res.status(400).send({ error: 'Cannot find transactions, try again' })
+        }
     }
 
     async create(req: Request, res: Response) {
@@ -28,7 +42,7 @@ class TransactionTypeController {
                 TransactionTypeView.render(typeDesc),
             )
         } catch (err) {
-            return res.status(400).send({ error: 'Cannot register user, try again' })
+            return res.status(400).send({ error: 'Cannot register transaction type, try again' })
         }
     }
 }
