@@ -9,37 +9,42 @@ class TransactionController {
     async index(req: Request, res: Response) {
         try {
             const { enterpriseId } = req
+            let { page = 1, limit = 10 } = req.query
 
             if (!enterpriseId) {
                 return res.status(400).send('Enteprise is not assigned to user')
             }
 
-            const repository = getRepository(Enterprise);
+            limit = (limit < 0 || limit > 50) ?  10 : limit;
+
+            page = (page < 1) ? 1 : page;
 
             const transactions = await getRepository(Transaction)
-                    .find({
-                        relations: ['enterprise', 'type'],
-                        where: {
-                            enterprise: enterpriseId
-                        },
-                        order: {
-                            createdAt: 'DESC',
-                        },
-                        take: 1000,
-                        cache: true
-                    })
+                .createQueryBuilder("transactions")
+                .innerJoinAndSelect("transactions.type", "transactionTypes")
+                .innerJoinAndSelect("transactions.enterprise", "enterprises")
+                .where("enterprises.id = :enterpriseId")
+                .orderBy("transactions.createdAt", "DESC")
+                .setParameters({ enterpriseId })
+                .skip(Number(page) * Number(limit))
+                .take(Number(limit))
+                .cache(true)
+                .getManyAndCount()
 
-            if (transactions.length === 0) {
+            if (!transactions) {
                 return res.status(400).send('Transactions not found for this enterprise')
             }
 
-            return res.send(
-                TransactionView.renderMany(transactions)
-            )
+            return res.send({
+                page,
+                limit,
+                total: transactions[1],
+                transactions: TransactionView.renderMany(transactions[0])
+            })
 
         } catch (err) {
             console.log(err)
-            return res.status(400).send({ error: 'Cannot find user, try again' })
+            return res.status(400).send({ error: 'Cannot find transactions, try again' })
         }
     }
 
