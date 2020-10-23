@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
+import Enterprise from '../models/Enterprise';
 import Transaction from '../models/Transaction';
 import TransactionType from '../models/TransactionType';
-import TransactionView from '../views/transactions_view';
+import TransactionView from '../views/transaction_view';
 
 class TransactionController {
     async index(req: Request, res: Response) {
@@ -18,28 +19,36 @@ class TransactionController {
             if (!enterpriseId) {
                 return res.status(400).send('Enterprise is not assigned for transactions')
             }
-            const repository = getRepository(Transaction)
+            const repositoryEnterprise = getRepository(Enterprise)
+            const repositoryTransaction = getRepository(Transaction)
             const repositoryType = getRepository(TransactionType)
 
-            const typeExists = await repositoryType.findOneOrFail({ where: { type }})
-            if (!typeExists) {
-                return res.sendStatus(409)
+            const enterpriseExists = await repositoryEnterprise.findOne(enterpriseId)
+            if (!enterpriseExists) {
+                return res.status(400).send({ error: 'Enterprise not found' })
             }
 
-            const transaction = repository.create({
+            const typeExists = await repositoryType.findOne({ where: { type }})
+            if (!typeExists) {
+                return res.status(400).send({ error: 'Transaction type not found' })
+            }
+
+            const transaction = repositoryTransaction.create({
                 value,
                 local,
                 credit,
-                type: typeExists
+                type: typeExists,
+                enterprise: enterpriseExists
             })
 
-            await repository.save(transaction)
+            await repositoryTransaction.save(transaction)
 
             return res.status(201).json(
                 TransactionView.render(transaction)
             )
         } catch (err) {
-            return res.status(400).send({ error: 'Cannot register transaction type, try again' })
+            console.log(err)
+            return res.status(400).send({ error: 'Cannot register transaction, try again' })
         }
     }
 }
