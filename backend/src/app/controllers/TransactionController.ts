@@ -16,12 +16,25 @@ class TransactionController {
 
             const repository = getRepository(Enterprise);
 
-            const enterprise = await repository.findOne(enterpriseId, {
-                relations: ['transactions', 'transactions.enterprise', 'transactions.type']
-            })
+            const transactions = await getRepository(Transaction)
+                    .find({
+                        relations: ['enterprise', 'type'],
+                        where: {
+                            enterprise: enterpriseId
+                        },
+                        order: {
+                            createdAt: 'DESC',
+                        },
+                        take: 1000,
+                        cache: true
+                    })
+
+            if (transactions.length === 0) {
+                return res.status(400).send('Transactions not found for this enterprise')
+            }
 
             return res.send(
-                TransactionView.renderMany(enterprise.transactions)
+                TransactionView.renderMany(transactions)
             )
 
         } catch (err) {
@@ -38,20 +51,25 @@ class TransactionController {
                 return res.status(400).send('Enteprise is not assigned to user')
             }
 
-            const repository = getRepository(Transaction);
+            const transactions = await getRepository(Transaction)
+                    .find({
+                        relations: ['enterprise', 'type'],
+                        where: {
+                            enterprise: enterpriseId
+                        },
+                        order: {
+                            createdAt: 'DESC',
+                        },
+                        take: 1,
+                        cache: true
+                    })
 
-            const enterprise = await repository.find({
-                //where: { enterprise : enterpriseId},
-                order: {
-                    createdAt: 'DESC'
-                },
-                take: 1,
-                relations: ['enterprise', 'type']
-            })
+            if (transactions.length === 0) {
+                return res.status(400).send('Transactions not found for this enterprise')
+            }
 
-            console.log(enterprise)
             return res.send(
-                TransactionView.renderMany(enterprise)
+                TransactionView.render(transactions[0])
             )
 
         } catch (err) {
