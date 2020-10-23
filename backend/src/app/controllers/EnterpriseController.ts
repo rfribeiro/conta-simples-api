@@ -4,6 +4,7 @@ import BankAccount from '../models/BankAccount';
 import Enterprise from '../models/Enterprise';
 import User from '../models/User';
 import EnterpriseView from '../views/enterprise_view'
+import TransactionView from '../views/transaction_view'
 
 class EnterpriseController {
 
@@ -43,6 +44,32 @@ class EnterpriseController {
                 EnterpriseView.balance(user.enterprise)
             )
         } catch (err) {
+            return res.status(400).send({ error: 'Cannot find user, try again' })
+        }
+    }
+
+    async transactions(req: Request, res: Response) {
+        try {
+            const { enterpriseId } = req
+
+            if (!enterpriseId) {
+                return res.status(400).send('Enteprise is not assigned to user')
+            }
+
+            const repository = getRepository(Enterprise);
+
+            const enterprise = await repository.findOne(enterpriseId, {
+                relations: ['transactions', 'transactions.enterprise', 'transactions.type']
+            })
+
+            console.log(enterprise)
+
+            return res.send(
+                TransactionView.renderMany(enterprise.transactions)
+            )
+
+        } catch (err) {
+            console.log(err)
             return res.status(400).send({ error: 'Cannot find user, try again' })
         }
     }
