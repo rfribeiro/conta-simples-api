@@ -28,7 +28,7 @@ router.post('/transactions', AuthMiddleware, TransactionController.create)
 router.get('/transactions', AuthMiddleware, TransactionController.index)
 
 // Transactions types endpoints
-router.post('/transactions_type', AuthMiddleware, TransactionTypeController.create)
-router.get('/transactions_type', AuthMiddleware, TransactionTypeController.index)
+router.post('/transactions_types', AuthMiddleware, TransactionTypeController.create)
+router.get('/transactions_types', AuthMiddleware, TransactionTypeController.index)
 
 export default router
