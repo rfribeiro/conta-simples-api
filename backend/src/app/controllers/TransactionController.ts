@@ -9,10 +9,39 @@ class TransactionController {
     async index(req: Request, res: Response) {
         try {
             const { enterpriseId } = req
-            let { page = 1, limit = 10 } = req.query
+
+            let { page = 1, limit = 10,  date_begin, date_end } = req.query
+            let credit = (req.query.credit === 'true')
+            let debit = (req.query.debit === 'true')
 
             if (!enterpriseId) {
                 return res.status(400).send({ error: 'Enteprise is not assigned to user' })
+            }
+
+            let dateBegin = "1=1"
+            let dateEnd = "1=1"
+
+            try {
+                if (date_begin) {
+                    let date_parsed = new Date(date_begin as string)
+                    dateBegin = `transactions.createdAt >= \'${date_parsed.toISOString()}\'`
+                }
+
+                if (date_end) {
+                    let date_parsed = new Date(date_end as string)
+                    date_parsed.setUTCHours(23,59,59)
+                    dateEnd = `transactions.createdAt <= \'${date_parsed.toISOString()}\'`
+                }
+            } catch {
+                return res.status(400).send({ error: 'Invalid date on query' })
+            }
+
+            let credit_query = "1=1"
+
+            if (credit === true && debit === false) {
+                credit_query = 'credit = true'
+            } else if (debit === true && credit === false) {
+                credit_query = 'credit = false'
             }
 
             limit = (limit < 0 || limit > 50) ?  10 : Number(limit);
@@ -25,7 +54,11 @@ class TransactionController {
                 .createQueryBuilder("transactions")
                 .innerJoinAndSelect("transactions.type", "transactionTypes")
                 .innerJoinAndSelect("transactions.enterprise", "enterprises")
+                .leftJoinAndSelect("transactions.card", "cards")
                 .where("enterprises.id = :enterpriseId")
+                .andWhere(dateBegin)
+                .andWhere(dateEnd)
+                .andWhere(credit_query)
                 .orderBy("transactions.createdAt", "DESC")
                 .setParameters({ enterpriseId })
                 .skip(skip)
@@ -80,7 +113,7 @@ class TransactionController {
 
         } catch (err) {
             console.log(err)
-            return res.status(400).send({ error: 'Cannot find user, try again' })
+            return res.status(400).send({ error: 'Cannot find transaction, try again' })
         }
     }
 
