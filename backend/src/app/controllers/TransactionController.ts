@@ -16,7 +16,9 @@ class TransactionController {
             let debit = (req.query.debit === 'true')
 
             if (!enterpriseId) {
-                return res.status(400).send({ error: 'Enteprise is not assigned to user' })
+                return res.status(400).send({
+                    error: 'Enteprise is not assigned to user'
+                })
             }
 
             let dateBegin = "1=1"
@@ -34,7 +36,9 @@ class TransactionController {
                     dateEnd = `transactions.createdAt <= \'${date_parsed.toISOString()}\'`
                 }
             } catch {
-                return res.status(400).send({ error: 'Invalid date on query' })
+                return res.status(400).send({
+                    error: 'Invalid date on query'
+                })
             }
 
             let credit_query = "1=1"
@@ -68,7 +72,9 @@ class TransactionController {
                 .getManyAndCount()
 
             if (!transactions) {
-                return res.status(400).send({ error: 'Transactions not found for this enterprise' })
+                return res.status(400).send({
+                    error: 'Transactions not found for this enterprise'
+                })
             }
 
             return res.send({
@@ -89,7 +95,9 @@ class TransactionController {
             const { enterpriseId } = req
 
             if (!enterpriseId) {
-                return res.status(400).send({ error: 'Enteprise is not assigned to user'})
+                return res.status(400).send({
+                    error: 'Enteprise is not assigned to user'
+                })
             }
 
             const transaction = await getRepository(Transaction)
@@ -106,7 +114,9 @@ class TransactionController {
                 .getOne()
 
             if (!transaction) {
-                return res.status(400).send({ error: 'Transactions not found for this enterprise' })
+                return res.status(400).send({
+                    error: 'Transactions not found for this enterprise'
+                })
             }
 
             return res.send(
@@ -115,7 +125,9 @@ class TransactionController {
 
         } catch (err) {
             console.log(err)
-            return res.status(400).send({ error: 'Cannot find transaction, try again' })
+            return res.status(400).send({
+                error: 'Cannot find transaction, try again'
+            })
         }
     }
 
@@ -126,27 +138,36 @@ class TransactionController {
             const { value, local, credit, finalCard, type } = req.body
 
             if (!enterpriseId) {
-                return res.status(400).send({ error: 'Enterprise is not assigned for transactions' })
+                return res.status(400).send({
+                    error: 'Enterprise is not assigned for transactions'
+                })
             }
             const repositoryEnterprise = getRepository(Enterprise)
             const repositoryTransaction = getRepository(Transaction)
             const repositoryType = getRepository(TransactionType)
             const repositoryCard = getRepository(Card)
 
-            const enterpriseExists = await repositoryEnterprise.findOne(enterpriseId)
+            const enterpriseExists = await repositoryEnterprise
+                .findOne(enterpriseId)
             if (!enterpriseExists) {
-                return res.status(400).send({ error: 'Enterprise not found' })
+                return res.status(400).send({
+                    error: 'Enterprise not found'
+                })
             }
 
             const typeExists = await repositoryType.findOne({ where: { type }})
             if (!typeExists) {
-                return res.status(400).send({ error: 'Transaction type not found' })
+                return res.status(400).send({
+                    error: 'Transaction type not found'
+                })
             }
 
             let card = null
             if (finalCard) {
                 if (finalCard.length != process.env.CARD_FINAL_LENGHT) {
-                    return res.status(400).send({ error: 'Card wrong format not found' })
+                    return res.status(400).send({
+                        error: 'Card wrong format not found'
+                    })
                 }
                 const card_query = `number like \'%${finalCard}\'`
                 const cardExists = await repositoryCard
@@ -156,7 +177,9 @@ class TransactionController {
                     .getOne()
 
                 if (!cardExists) {
-                    return res.status(400).send({ error: 'Card type not found' })
+                    return res.status(400).send({
+                        error: 'Card type not found'
+                    })
                 }
                 card = cardExists
             }
@@ -177,7 +200,9 @@ class TransactionController {
             )
         } catch (err) {
             console.log(err)
-            return res.status(400).send({ error: 'Cannot register transaction, try again' })
+            return res.status(400).send({
+                error: 'Cannot register transaction, try again'
+            })
         }
     }
 }
