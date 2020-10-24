@@ -3,11 +3,16 @@ import Card from "../models/Card"
 
 class CardView {
 
+    final(data: Card) {
+        return data.final()
+    }
+
     render(data: Card) {
-        const { id, number } = data
+        const { id, balance } = data
         return ({
             id,
-            final: number.substr(number.length - 4),
+            final: data.final(),
+            balance,
         })
     }
 
