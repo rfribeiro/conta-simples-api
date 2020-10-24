@@ -184,7 +184,7 @@ class TransactionController {
                 card = cardExists
             }
 
-            const transaction = repositoryTransaction.create({
+            const transaction = await repositoryTransaction.create({
                 value,
                 local,
                 credit,
@@ -194,6 +194,17 @@ class TransactionController {
             })
 
             await repositoryTransaction.save(transaction)
+
+            // update card balance
+            if (card) {
+                card.balance = Number(card.balance) + Number(value)
+                await repositoryCard.save(card)
+            }
+            // update enterprise balance
+            if (enterpriseExists) {
+                enterpriseExists.balance = Number(enterpriseExists.balance) + Number(value)
+                await repositoryEnterprise.save(enterpriseExists)
+            }
 
             return res.status(201).json(
                 TransactionView.render(transaction)
