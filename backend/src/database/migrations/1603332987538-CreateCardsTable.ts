@@ -22,7 +22,8 @@ export class CreateCardsTable1603332987538 implements MigrationInterface {
             },
             {
                 name: 'balance',
-                type: 'numeric',            
+                type: 'numeric',
+                default: 0,
             },
             {
                 name: 'enterprise_id',
