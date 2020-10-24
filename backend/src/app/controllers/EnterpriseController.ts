@@ -15,7 +15,7 @@ class EnterpriseController {
             const { enterpriseId } = req
 
             if (!enterpriseId) {
-                return res.status(400).send('Enteprise is not assigned to user')
+                return res.status(400).send({ error: 'Enteprise is not assigned to user' })
             }
 
             const repositoryEnterprise = getRepository(Enterprise);
@@ -55,7 +55,7 @@ class EnterpriseController {
             const { enterpriseId } = req
 
             if (!enterpriseId) {
-                return res.status(400).send('Enteprise is not assigned to user')
+                return res.status(400).send({ error: 'Enteprise is not assigned to user' })
             }
 
             const repository = getRepository(Enterprise);
@@ -79,7 +79,7 @@ class EnterpriseController {
             const { enterpriseId } = req
 
             if (!enterpriseId) {
-                return res.status(400).send('Enteprise is not assigned to user')
+                return res.status(400).send({ error: 'Enteprise is not assigned to user' })
             }
 
             const repository = getRepository(Enterprise);
@@ -118,7 +118,7 @@ class EnterpriseController {
             })
 
             if (user.enterprise) {
-                return res.status(400).send('User already assigned to a Enterprise')
+                return res.status(400).send({ error: 'User already assigned to a Enterprise' })
             }
 
             const bankAccount = new BankAccount()
@@ -135,7 +135,8 @@ class EnterpriseController {
             )
 
         } catch (err) {
-            return res.status(400).send({ error: 'Cannot register user, try again' })
+            console.log(err)
+            return res.status(400).send({ error: 'Cannot register enterprise, try again' })
         }
     }
 }
