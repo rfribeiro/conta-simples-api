@@ -24,20 +24,48 @@ class CardController {
         }
     }
 
+    async show(req: Request, res: Response) {
+        try
+        {
+            const { enterpriseId } = req
+            const { final } = req.params
+
+            const card_query = `number like \'%${final}\'`
+
+            const card = await getRepository(Card)
+                .createQueryBuilder("cards")
+                .innerJoinAndSelect("cards.enterprise", "enterprises")
+                .where("enterprises.id = :enterpriseId")
+                .andWhere(card_query)
+                .setParameters({ enterpriseId })
+                .cache(true)
+                .getOne()
+
+            if (!card) {
+                return res.status(400).send({ error: 'Transactions not found for this enterprise' })
+            }
+
+            return res.send(
+                CardView.render(card)
+            )
+
+        } catch (err) {
+            console.log(err)
+            return res.status(400).send({ error: 'Cannot find card, try again' })
+        }
+    }
+
     async create(req: Request, res: Response) {
         try 
         {           
             const { enterpriseId } = req
             const { number } = req.body
 
-            console.log(number, enterpriseId)
-
             const repository = getRepository(Card)
             const repositoryEnterprise = getRepository(Enterprise)
 
             const exists = await repository.findOne({ where: { number }})
 
-            console.log(exists)
             if (exists) {
                 return res.sendStatus(409)
             }
@@ -46,7 +74,6 @@ class CardController {
             if (!enterpriseExists) {
                 return res.status(400).send({ error: 'Enterprise not found' })
             }
-            console.log(enterpriseExists)
 
             const card = repository.create({ number })
             card.enterprise = enterpriseExists
