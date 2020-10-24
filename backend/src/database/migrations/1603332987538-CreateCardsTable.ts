@@ -21,6 +21,10 @@ export class CreateCardsTable1603332987538 implements MigrationInterface {
                 isUnique: true,              
             },
             {
+                name: 'balance',
+                type: 'numeric',            
+            },
+            {
                 name: 'enterprise_id',
                 type: 'uuid',
             },
