@@ -2,6 +2,7 @@ import { BeforeInsert, Column, CreateDateColumn, Entity, getRepository, JoinColu
 import BankAccount from './BankAccount'
 import User from './User';
 import Transaction from './Transaction'
+import Card from './Card'
 
 @Entity('enterprises')
 class Enterprise {
@@ -31,6 +32,9 @@ class Enterprise {
 
     @OneToMany(type => Transaction, transaction => transaction.enterprise)
     transactions: Transaction[];
+
+    @OneToMany(type => Card, card => card.enterprise)
+    cards: Card[];
 }
 
 export default Enterprise;
