@@ -13,8 +13,8 @@ class EnterpriseView {
             cnpj,
             createdAt,
             balance,
-            bankAccount: BankAccountView.render(bankAccount),
-            cards: CardView.renderMany(cards),
+            bankAccount: (bankAccount) ? BankAccountView.render(bankAccount) : null,
+            cards: (cards) ? CardView.renderMany(cards) : null,
             user: UserView.render(user),
         })
     }
