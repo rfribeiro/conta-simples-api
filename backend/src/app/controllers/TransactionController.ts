@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
+import Card from '../models/Card';
 import Enterprise from '../models/Enterprise';
 import Transaction from '../models/Transaction';
 import TransactionType from '../models/TransactionType';
@@ -95,6 +96,7 @@ class TransactionController {
                 .createQueryBuilder("transactions")
                 .innerJoinAndSelect("transactions.type", "transactionTypes")
                 .innerJoinAndSelect("transactions.enterprise", "enterprises")
+                .leftJoinAndSelect("transactions.card", "cards")
                 .where("enterprises.id = :enterpriseId")
                 .orderBy("transactions.createdAt", "DESC")
                 .setParameters({ enterpriseId })
@@ -129,6 +131,7 @@ class TransactionController {
             const repositoryEnterprise = getRepository(Enterprise)
             const repositoryTransaction = getRepository(Transaction)
             const repositoryType = getRepository(TransactionType)
+            const repositoryCard = getRepository(Card)
 
             const enterpriseExists = await repositoryEnterprise.findOne(enterpriseId)
             if (!enterpriseExists) {
@@ -140,10 +143,29 @@ class TransactionController {
                 return res.status(400).send({ error: 'Transaction type not found' })
             }
 
+            let card = null
+            if (finalCard) {
+                if (finalCard.length != process.env.CARD_FINAL_LENGHT) {
+                    return res.status(400).send({ error: 'Card wrong format not found' })
+                }
+                const card_query = `number like \'%${finalCard}\'`
+                const cardExists = await repositoryCard
+                    .createQueryBuilder("cards")
+                    .where(card_query)
+                    .cache(true)
+                    .getOne()
+
+                if (!cardExists) {
+                    return res.status(400).send({ error: 'Card type not found' })
+                }
+                card = cardExists
+            }
+
             const transaction = repositoryTransaction.create({
                 value,
                 local,
                 credit,
+                card,
                 type: typeExists,
                 enterprise: enterpriseExists
             })
