@@ -3,6 +3,7 @@ import { getRepository } from 'typeorm';
 import Card from '../models/Card';
 import Enterprise from '../models/Enterprise';
 import CardView from '../views/card_view';
+import TransactionView from '../views/transaction_view'
 
 class CardController {
     async index(req: Request, res: Response) {
@@ -15,7 +16,7 @@ class CardController {
                 return res.sendStatus(409)
             }
 
-            return res.status(201).json(
+            return res.status(200).json(
                 CardView.renderMany(exists)
             )
         } catch (err) {
