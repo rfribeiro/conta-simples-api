@@ -24,7 +24,7 @@ class Transaction {
     @JoinColumn({name: 'type_id'})
     type: TransactionType;
 
-    @OneToOne(type => Card)
+    @ManyToOne(type => Card)
     @JoinColumn({name: 'card_id'})
     card: Card;
 
