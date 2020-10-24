@@ -1,10 +1,12 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import BankAccount from '../models/BankAccount';
+import Card from '../models/Card';
 import Enterprise from '../models/Enterprise';
 import User from '../models/User';
 import EnterpriseView from '../views/enterprise_view'
 import TransactionView from '../views/transaction_view'
+import CardView from '../views/card_view'
 
 class EnterpriseController {
 
@@ -19,7 +21,7 @@ class EnterpriseController {
             const repositoryEnterprise = getRepository(Enterprise);
 
             const fullEnterprise = await repositoryEnterprise.findOneOrFail(enterpriseId, {
-                relations: ['user', 'bankAccount']
+                relations: ['user', 'bankAccount', 'cards']
             })
 
             return res.send(
@@ -64,6 +66,30 @@ class EnterpriseController {
 
             return res.send(
                 TransactionView.renderMany(enterprise.transactions)
+            )
+
+        } catch (err) {
+            console.log(err)
+            return res.status(400).send({ error: 'Cannot find user, try again' })
+        }
+    }
+
+    async cards(req: Request, res: Response) {
+        try {
+            const { enterpriseId } = req
+
+            if (!enterpriseId) {
+                return res.status(400).send('Enteprise is not assigned to user')
+            }
+
+            const repository = getRepository(Enterprise);
+
+            const enterprise = await repository.findOne(enterpriseId, {
+                relations: ['cards', 'transactions.enterprise']
+            })
+
+            return res.send(
+                CardView.renderMany(enterprise.cards)
             )
 
         } catch (err) {
