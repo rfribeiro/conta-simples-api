@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, ManyToOne, JoinColumn, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import Enterprise from './Enterprise';
 
 @Entity('cards')
 class Card {
@@ -6,7 +7,11 @@ class Card {
     id: string ;
 
     @Column()
-    number: number;
+    number: string;
+
+    @ManyToOne(type => Enterprise)
+    @JoinColumn({name: 'enterprise_id'})
+    enterprise: Enterprise;
 }
 
 export default Card;
