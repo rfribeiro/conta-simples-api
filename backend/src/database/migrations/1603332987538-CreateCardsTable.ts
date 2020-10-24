@@ -17,9 +17,21 @@ export class CreateCardsTable1603332987538 implements MigrationInterface {
             },
             {
                 name: 'number',
-                type: 'int',
+                type: 'varchar',
                 isUnique: true,              
             },
+            {
+                name: 'enterprise_id',
+                type: 'uuid',
+            },
+        ],
+        foreignKeys: [
+            {
+                name: 'CardEnterprise',
+                columnNames: ['enterprise_id'],
+                referencedTableName: 'enterprises',
+                referencedColumnNames: ['id'],
+            }
         ]
     }))
     }

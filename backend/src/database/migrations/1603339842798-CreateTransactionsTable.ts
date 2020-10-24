@@ -41,6 +41,11 @@ export class CreateTransactionsTable1603339842798 implements MigrationInterface 
                     name: 'enterprise_id',
                     type: 'uuid',
                 },
+                {
+                    name: 'card_id',
+                    type: 'uuid',
+                    isNullable: true,
+                },
             ],
             foreignKeys: [
                 {
@@ -53,6 +58,12 @@ export class CreateTransactionsTable1603339842798 implements MigrationInterface 
                     name: 'Enterprise',
                     columnNames: ['enterprise_id'],
                     referencedTableName: 'enterprises',
+                    referencedColumnNames: ['id'],
+                },
+                {
+                    name: 'Card',
+                    columnNames: ['card_id'],
+                    referencedTableName: 'cards',
                     referencedColumnNames: ['id'],
                 }
             ]
