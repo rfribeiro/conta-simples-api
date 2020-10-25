@@ -9,16 +9,47 @@ class CardController {
     async index(req: Request, res: Response) {
         try
         {
-            const repository = getRepository(Card)
+            const { enterpriseId } = req
+            let { page = 1, limit = 10 } = req.query
+            const { final } = req.query
 
-            const exists = await repository.find()
-            if (!exists) {
+            if (final && final.length !== Number(process.env.CARD_FINAL_LENGHT)) {
+                return res.status(400).send({
+                    error: 'Wrong card number format'
+                })
+            }
+
+            let card_query = "1=1"
+            if (final) {
+                card_query = `number like \'%${final}\'`
+            }
+
+            limit = (limit < 0 || limit > 50) ?  10 : Number(limit);
+            page = (page < 1) ? 1 : Number(page);
+            const skip = (page * limit) - limit
+
+            const cards = await getRepository(Card)
+                .createQueryBuilder("cards")
+                .innerJoinAndSelect("cards.enterprise", "enterprises")
+                .where("enterprises.id = :enterpriseId")
+                .andWhere(card_query)
+                .setParameters({ enterpriseId })
+                .skip(skip)
+                .take(limit)
+                .cache(true)
+                .getManyAndCount()
+
+            if (!cards) {
                 return res.sendStatus(409)
             }
 
-            return res.status(200).json(
-                CardView.renderMany(exists)
-            )
+            return res.status(200).json( {
+                page,
+                limit,
+                total: cards[1],
+                cards: CardView.renderMany(cards[0])
+            })
+
         } catch (err) {
             console.log(err)
             return res.status(400).send({ error: 'Cannot find card, try again' })
@@ -29,21 +60,19 @@ class CardController {
         try
         {
             const { enterpriseId } = req
-            const { final } = req.params
-
-            const card_query = `number like \'%${final}\'`
+            const { id } = req.params
 
             const card = await getRepository(Card)
                 .createQueryBuilder("cards")
                 .innerJoinAndSelect("cards.enterprise", "enterprises")
                 .where("enterprises.id = :enterpriseId")
-                .andWhere(card_query)
-                .setParameters({ enterpriseId })
+                .andWhere("cards.id = :id")
+                .setParameters({ enterpriseId, id })
                 .cache(true)
                 .getOne()
 
             if (!card) {
-                return res.status(400).send({ error: 'Transactions not found for this enterprise' })
+                return res.status(400).send({ error: 'Card not found for this enterprise' })
             }
 
             return res.send(
