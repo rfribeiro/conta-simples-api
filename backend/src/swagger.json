@@ -8,5 +8,8 @@
             "name": "MIT",
             "url": "https://opensource.org/licenses/MIT"
         }
-    }
+    },
+    "schemes": ["http"],
+    "host": "localhost:3080",
+    "basePath": "/api/v1"
 }
