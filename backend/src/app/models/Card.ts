@@ -1,4 +1,4 @@
-require('dotenv/config')
+require('dotenv').config({ path: __dirname+'/.env' });
 import { Column, ManyToOne, JoinColumn, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm'
 import Enterprise from './Enterprise';
 import Transaction from './Transaction';

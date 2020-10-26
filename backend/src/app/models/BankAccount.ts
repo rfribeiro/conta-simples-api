@@ -1,4 +1,4 @@
-import { AfterInsert, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { AfterInsert, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
 import Enterprise from './Enterprise';
 
 @Entity('bankaccounts')

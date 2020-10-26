@@ -1,5 +1,4 @@
 import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
-import bcrypt from 'bcryptjs'
 import PasswordHelper from '../utils/PasswordHelper';
 import Enterprise from './Enterprise';
 
