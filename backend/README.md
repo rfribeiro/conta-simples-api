@@ -1,6 +1,15 @@
 # Project for Conta Simples Backend
 
-## Description
+## 🚀 Technology
+
+This project uses the thechnologies below:
+
+- [Node.js](https://nodejs.org/en/)
+- [Express](https://expressjs.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Postgres](https://www.postgresql.org/)
+
+## 💻 Description
 
 The project main objective is to develop a bancend application to response some specific endpoints that were defined by Conta Simples.
 
@@ -16,7 +25,7 @@ The backend will threat messages using REST API
 - Endpoint to return last transaction that the enterprise did
 - Return transctions grouped by card
 
-## Database model
+## 📦 Database model
 
 I'm using postgres database (relational) to store all data from the back end
 
@@ -57,7 +66,7 @@ after run the command below
 yarn typeorm migration:run
 ```
 
-## Run application
+## 🔥 Run application
 
 - Run server
 ```
