@@ -8,6 +8,7 @@
     "dev": "tsnd --transpile-only --ignore-watch node_modules src/server.ts",
     "build": "tsc",
     "typeorm": "tsnd ./node_modules/typeorm/cli.js",
+    "heroku-postbuild": "cp -rf src/app/config dist/app; cp src/swagger.json dist/swagger.json",
     "test": "env TS_NODE_PROJECT=\"tsconfig.testing.json\" npx mocha --require ts-node/register 'src/app/tests/**/*.ts'"
   },
   "dependencies": {
