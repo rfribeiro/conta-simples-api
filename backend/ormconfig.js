@@ -7,12 +7,8 @@ module.exports = {
   database: process.env.TYPEORM_DATABASE,
   entities: [process.env.TYPEORM_ENTITIES],
   migrations: [process.env.TYPEORM_MIGRATIONS],
-  ssl: true,
-  extra : {
-    ssl: {
-      rejectUnauthorized: false,
-    }
-  },
+  ssl: (process.env.NODE_ENV === 'prod') ? true : false,
+  extra: (process.env.TYPEORM_DRIVER_EXTRA) ? JSON.parse(process.env.TYPEORM_DRIVER_EXTRA): {},
   cli: {
     migrationsDir: process.env.TYPEORM_MIGRATIONS_DIR,
   },
