@@ -176,6 +176,73 @@ class TransactionController {
         }
     }
 
+    async grouped(req: Request, res: Response) {
+        try
+        {
+            const { enterpriseId } = req
+
+            const { final } = req.query
+
+            if (!enterpriseId) {
+                return res.status(400).send({
+                    error: 'Enteprise is not assigned to user'
+                })
+            }
+
+            if (final && final.length !== Number(process.env.CARD_FINAL_LENGHT)) {
+                return res.status(400).send({
+                    error: 'Wrong card number format'
+                })
+            }
+            let finalcard_query = "1=1"
+            if (final) {
+                finalcard_query = `cards.number like \'%${final}\'`
+            }
+
+            // first find cards to be grouped
+
+            const transactions = await getRepository(Transaction)
+                .createQueryBuilder("transactions")
+                .innerJoinAndSelect("transactions.type", "transactionTypes")
+                .innerJoinAndSelect("transactions.enterprise", "enterprises")
+                .leftJoinAndSelect("transactions.card", "cards")
+                .where("enterprises.id = :enterpriseId")
+                .andWhere(finalcard_query)
+                .andWhere("transactions.card_id is not null")
+                .orderBy("transactions.createdAt", "DESC")
+                .setParameters({ enterpriseId })
+                .groupBy("cards.id")
+                .addGroupBy("transactions.id")
+                .addGroupBy("transactionTypes.id")
+                .addGroupBy("enterprises.id")
+                .orderBy("cards.number")
+                .cache(true)
+                .getManyAndCount()
+
+            if (!transactions) {
+                return res.status(400).send({
+                    error: 'Transactions not found for this enterprise'
+                })
+            }
+
+            const groupedByCards = transactions[0].reduce(function (data, transaction) {
+                data[transaction.card.final()] = data[transaction.card.final()] || [];
+                data[transaction.card.final()].push(TransactionView.render(transaction));
+                return data;
+            }, Object.create(null))
+
+            return res.send({
+                groupedByCards
+            })
+
+        } catch (err) {
+            console.log(err)
+            return res.status(400).send({
+                error: 'Cannot find card, try again'
+            })
+        }
+    }
+
     async create(req: Request, res: Response) {
         try
         {
