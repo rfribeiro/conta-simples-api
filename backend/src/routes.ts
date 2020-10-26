@@ -16,8 +16,8 @@ router.post('/forgot_password', AuthController.forgotPassword)
 router.post('/reset_password', AuthController.resetPassword)
 
 // User endpoints
-router.post('/users', UserController.register)
-router.get('/users', AuthMiddleware, UserController.index)
+router.post('/user', UserController.register)
+router.get('/user', AuthMiddleware, UserController.index)
 
 // Enterprise endpoints
 router.post('/enterprises', AuthMiddleware, EnterpriseController.register)
