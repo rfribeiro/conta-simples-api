@@ -29,6 +29,9 @@ router.get('/enterprises/transactions', AuthMiddleware, EnterpriseController.tra
 router.post('/transactions', AuthMiddleware, TransactionController.create)
 router.get('/transactions', AuthMiddleware, TransactionController.index)
 router.get('/transactions/last', AuthMiddleware, TransactionController.last)
+router.get('/transactions/grouped', AuthMiddleware, TransactionController.grouped)
+router.get('/transactions/:id', AuthMiddleware, TransactionController.show)
+
 
 // Transactions types endpoints
 router.post('/transactions_types', AuthMiddleware, TransactionTypeController.create)
@@ -37,5 +40,6 @@ router.get('/transactions_types', AuthMiddleware, TransactionTypeController.inde
 // Cards endpoints
 router.post('/cards', AuthMiddleware, CardController.create)
 router.get('/cards', AuthMiddleware, CardController.index)
+router.get('/cards/:id', AuthMiddleware, CardController.show)
 
 export default router
