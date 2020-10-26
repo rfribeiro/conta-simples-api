@@ -33,7 +33,7 @@ Database schema describe below:
 
 ![database schema](./images/contasimples-database.png)
 
-### Pre-configuration
+### 🚧 Pre-configuration
 
 - Install docker
 
