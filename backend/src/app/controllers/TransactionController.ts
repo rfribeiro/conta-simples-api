@@ -95,7 +95,43 @@ class TransactionController {
 
         } catch (err) {
             console.log(err)
-            return res.status(400).send({ error: 'Cannot find transactions, try again' })
+            return res.status(400).send({
+                error: 'Cannot find transactions, try again'
+            })
+        }
+    }
+
+    async show(req: Request, res: Response) {
+        try
+        {
+            const { enterpriseId } = req
+            const { id } = req.params
+
+            const transaction = await getRepository(Transaction)
+                .createQueryBuilder("transactions")
+                .innerJoinAndSelect("transactions.type", "transactionTypes")
+                .innerJoinAndSelect("transactions.enterprise", "enterprises")
+                .leftJoinAndSelect("transactions.card", "cards")
+                .where("enterprises.id = :enterpriseId")
+                .andWhere("transactions.id = :id")
+                .setParameters({ enterpriseId, id })
+                .cache(true)
+                .getOne()
+
+            if (!transaction) {
+                return res.status(400).send({
+                    error: 'Transaction not found for this enterprise'
+                })
+            }
+
+            return res.send(
+                TransactionView.render(transaction)
+            )
+        } catch (err) {
+            console.log(err)
+            return res.status(400).send({
+                error: 'Cannot find transaction, try again'
+            })
         }
     }
 
@@ -124,7 +160,7 @@ class TransactionController {
 
             if (!transaction) {
                 return res.status(400).send({
-                    error: 'Transactions not found for this enterprise'
+                    error: 'Transaction not found for this enterprise'
                 })
             }
 
