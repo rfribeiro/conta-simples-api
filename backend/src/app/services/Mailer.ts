@@ -1,5 +1,5 @@
-const nodemailer = require('nodemailer');
-const nodemailerSendgrid = require('nodemailer-sendgrid');
+import * as nodemailer from 'nodemailer';
+import nodemailerSendgrid = require('nodemailer-sendgrid');
 const hbs = require('nodemailer-express-handlebars');
 const path = require('path');
 
