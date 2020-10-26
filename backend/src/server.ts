@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import express from 'express'
 import router from './routes'
 import swaggerUi from 'swagger-ui-express'
@@ -19,4 +20,4 @@ app.use(function (req,res,next){
     });
 });
 
-app.listen(3000, () => console.log('🔥 Server started'));
+app.listen(process.env.SERVER_LISTEN_PORT || 3000, () => console.log('🔥 Server started'));
