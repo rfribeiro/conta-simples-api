@@ -14,6 +14,17 @@ class TransactionController {
             let { page = 1, limit = 10,  date_begin, date_end } = req.query
             let credit = (req.query.credit === 'true')
             let debit = (req.query.debit === 'true')
+            const { final } = req.query
+
+            if (final && final.length !== Number(process.env.CARD_FINAL_LENGHT)) {
+                return res.status(400).send({
+                    error: 'Wrong card number format'
+                })
+            }
+            let finalcard_query = "1=1"
+            if (final) {
+                finalcard_query = `cards.number like \'%${final}\'`
+            }
 
             if (!enterpriseId) {
                 return res.status(400).send({
@@ -23,7 +34,6 @@ class TransactionController {
 
             let dateBegin = "1=1"
             let dateEnd = "1=1"
-
             try {
                 if (date_begin) {
                     let date_parsed = new Date(date_begin as string)
@@ -50,9 +60,7 @@ class TransactionController {
             }
 
             limit = (limit < 0 || limit > 50) ?  10 : Number(limit);
-
             page = (page < 1) ? 1 : Number(page);
-
             const skip = (page * limit) - limit
 
             const transactions = await getRepository(Transaction)
@@ -64,6 +72,7 @@ class TransactionController {
                 .andWhere(dateBegin)
                 .andWhere(dateEnd)
                 .andWhere(credit_query)
+                .andWhere(finalcard_query)
                 .orderBy("transactions.createdAt", "DESC")
                 .setParameters({ enterpriseId })
                 .skip(skip)
