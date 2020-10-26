@@ -52,7 +52,9 @@ class CardController {
 
         } catch (err) {
             console.log(err)
-            return res.status(400).send({ error: 'Cannot find card, try again' })
+            return res.status(400).send({
+                error: 'Cannot find card, try again'
+            })
         }
     }
 
@@ -72,7 +74,9 @@ class CardController {
                 .getOne()
 
             if (!card) {
-                return res.status(400).send({ error: 'Card not found for this enterprise' })
+                return res.status(400).send({
+                    error: 'Card not found for this enterprise'
+                })
             }
 
             return res.send(
@@ -81,7 +85,9 @@ class CardController {
 
         } catch (err) {
             console.log(err)
-            return res.status(400).send({ error: 'Cannot find card, try again' })
+            return res.status(400).send({
+                error: 'Cannot find card, try again'
+            })
         }
     }
 
@@ -102,7 +108,9 @@ class CardController {
 
             const enterpriseExists = await repositoryEnterprise.findOne(enterpriseId)
             if (!enterpriseExists) {
-                return res.status(400).send({ error: 'Enterprise not found' })
+                return res.status(400).send({
+                    error: 'Enterprise not found'
+                })
             }
 
             const card = repository.create({ number })
@@ -114,7 +122,9 @@ class CardController {
             )
         } catch (err) {
             console.log(err)
-            return res.status(400).send({ error: 'Cannot register card, try again' })
+            return res.status(400).send({
+                error: 'Cannot register card, try again'
+            })
         }
     }
 }

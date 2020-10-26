@@ -18,7 +18,9 @@ class TransactionTypeController {
                 TransactionTypeView.renderMany(exists)
             )
         } catch (err) {
-            return res.status(400).send({ error: 'Cannot find transactions, try again' })
+            return res.status(400).send({
+                error: 'Cannot find transactions, try again'
+            })
         }
     }
 
@@ -42,7 +44,9 @@ class TransactionTypeController {
                 TransactionTypeView.render(typeDesc),
             )
         } catch (err) {
-            return res.status(400).send({ error: 'Cannot register transaction type, try again' })
+            return res.status(400).send({
+                error: 'Cannot register transaction type, try again'
+            })
         }
     }
 }

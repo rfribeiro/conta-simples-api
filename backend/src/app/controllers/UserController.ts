@@ -19,7 +19,9 @@ class UserController {
                 user: UserView.render(userExists)
             })
         } catch (err) {
-            return res.status(400).send({ error: 'Cannot find user, try again' })
+            return res.status(400).send({
+                error: 'Cannot find user, try again'
+            })
         }
     }
 
@@ -47,7 +49,9 @@ class UserController {
                 })
             })
         } catch (err) {
-            return res.status(400).send({ error: 'Cannot register user, try again' })
+            return res.status(400).send({
+                error: 'Cannot register user, try again'
+            })
         }
     }
 }

@@ -39,7 +39,9 @@ class AuthController {
             })
         } catch (err) {
             console.log(err)
-            return res.status(400).send({ error: 'Cannot authenticate user, try again' })
+            return res.status(400).send({
+                error: 'Cannot authenticate user, try again'
+            })
         }
     }
 
@@ -84,7 +86,9 @@ class AuthController {
             } else {
                 console.log(err);
             }
-            res.status(400).send({ error: 'Cannot send reset email, try again' })
+            res.status(400).send({
+                error: 'Cannot send reset email, try again'
+            })
         }
     }
 
@@ -120,7 +124,9 @@ class AuthController {
                 message: 'password reset with success'
             })
         } catch (err) {
-            res.status(400).send({ error: 'Cannot reset password, try again' })
+            res.status(400).send({
+                error: 'Cannot reset password, try again'
+            })
         }
     }
 }
