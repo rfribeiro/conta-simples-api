@@ -100,7 +100,7 @@ yarn dev
 
 https://contasimples.herokuapp.com/api/v1
 
-## API protocol
+## 🚨 API protocol
 
 - register new user
 ```
